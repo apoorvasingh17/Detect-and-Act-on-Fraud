@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django import forms
+from django.forms import ModelForm
+
 
 class UserRegistrationForm(forms.Form):
     name = forms.CharField(
@@ -42,3 +44,12 @@ class UserAuthenticationForm(forms.Form):
 class question:
     class Meta:
         field=('question')
+
+
+
+class CardForm(forms.Form):
+    fullname=forms.CharField(max_length=250)
+    cardnumber=forms.CharField(max_length=500)
+    mm=forms.IntegerField()
+    yy=forms.IntegerField()
+    cvv=forms.IntegerField()

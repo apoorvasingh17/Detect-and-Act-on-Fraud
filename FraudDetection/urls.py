@@ -26,5 +26,7 @@ urlpatterns = [
     url(r'^signinup/$', sign_in_up_view),
     url(r'^signin/$', sign_in_view),
     url(r'^signup/$', sign_up_view),
+    url(r'^portal/$', card_fill),
+
 
 ]

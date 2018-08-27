@@ -6,28 +6,25 @@ from django.http import *
 from django.conf import settings
 import json
 
-from .models import EXPERIENCE
+
 from django.template import loader
 
 from FraudDetection.forms import *
-from FraudDetection.models import QUESTION,ANSWER
+from FraudDetection.models import *
 from django.http import HttpResponse
-
 
 
 
 def home(request):
     is_logged_in = request.user.is_authenticated
-    if is_logged_in:
-        return news_feed(request)
-    else:
-        return render(request, 'home.html')
+    
+    return render(request, 'home.html')
 
 
 def sign_in_up_view(request):
     signin_form = UserAuthenticationForm()
-    singnup_form = UserRegistrationForm()
-    return render(request, 'home.html', {'signin' : signin_form, 'signup':singnup_form})
+    signup_form = UserRegistrationForm()
+    return render(request, 'home.html', {'signin' : signin_form, 'signup':signup_form})
 
 
 def sign_in_view(request):
@@ -42,7 +39,7 @@ def sign_in_view(request):
             return HttpResponseRedirect('/')
         else:
             raise forms.ValidationError('Looks like a username with that email or password is incorrect!!')
-    return render(request, template_name, {'form' : form})
+    return render(request, 'portal.html')
 
 
 def sign_up_view(request):
@@ -61,6 +58,16 @@ def sign_up_view(request):
             return HttpResponseRedirect('/')
         else:
             raise forms.ValidationError('Looks like a username with that email or password already exists')
-    return render(request, template_name, {'form' : form})
+    return render(request, 'portal.html')
 
 
+
+def card_fill(request):
+    form = CardForm(request.POST)
+    if form.is_valid():
+        userObj = form.cleaned_data
+        return HttpResponseRedirect('/')
+        
+    else:
+        form=CardForm()
+    return render(request, 'portal.html', {'form':form})
