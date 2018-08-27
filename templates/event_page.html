@@ -1,0 +1,167 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="">
+<head>
+<title>{{ event_name }}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="{% static 'css/layout.css' %}" rel="stylesheet" type="text/css" media="all">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="{% static 'css/event-page.css' %}" rel="stylesheet" type="text/css" media="all">
+<link href='https://fonts.googleapis.com/css?family=Montserrat|Cardo' rel='stylesheet' type='text/css'>
+<link href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' rel='stylesheet' type='text/css'>
+<link href="{% static 'css/share_experience.css' %}" rel="stylesheet" type="text/css" media="all">
+<link href="{% static 'css/nav_menu.css' %}" rel='stylesheet' type='text/css'>
+</head>
+<body id="top">
+    <header class="main_h">
+        <div class="row">
+            <a class="logo" href="../"><span style="font-size:15px;"> EmpowerHer </span><span style="margin-left:25px;"> ++</span></a>
+            <div class="mobile-toggle"><span></span><span></span><span></span></div>
+            <nav>   <ul>
+                <li><a href="/">Home</a></li>
+                <li> <span onclick="openAskQuestion()">Ask Question</span></li>
+                <li> <span onclick="openNav()">Share Experience</span></li>
+                <li><a href="../dashboard/">Dashboard</a></li>
+                {% if is_logged_in %}
+                    <li><a href="../logout/">Log Out</a></li>
+                {% else %}
+                    <li><a href="../">Sign In/Up </a></li>
+                {% endif %}
+                <li><a href="../user/?username={{username}}"> <figure class="avatar"><img src="{% static 'images/avatar.png' %}" alt=""></figure></a></li>
+            </ul>   </nav>
+        </div>
+    </header>
+    <div id="share-experience" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="paper">
+            <div class="paper-content">
+                <textarea id="experience-text" autofocus>{% if experience %} {{ experience }} {% endif %}</textarea>
+            </div>
+        </div>
+        <div class="div-button">
+            <div id="submit-experience-button" class="submit-button"> Submit Experience!</div>
+        </div>
+    </div>
+    <div id="ask-question" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeAskQuestion()">&times;</a>
+        <div class="container-ask-question">
+            <div class="demo-flex-spacer"></div>
+            <div class="webflow-style-input">
+                <input id="ask-input" type="email" placeholder="What's your question?"></input>
+                <button id="ask-button" type="submit"><i class="icon ion-android-arrow-forward"></i></button>
+            </div>
+            <div class="demo-flex-spacer"></div>
+        </div>
+    </div>
+    <div class="background-event">
+        <div class="topspacer bgded">
+          <div id="breadcrumb" class="hoc clear">
+            <h1 class="heading">{{ event_name }}</h1>
+            <div style="float:right; ">
+                <div id="going-button" class="{% if is_going %} going-guided-button {% else %} going-guide-button {% endif %}"
+                        data-state="{{ is_going }}">
+                    <span id="going-text"> {% if not is_going %} Are you going? {% else %} I am going! {% endif %} </span>
+                </div>
+                <div id="guide-button" class="{% if is_guide %} going-guided-button {% else %} going-guide-button {% endif %}"
+                    data-state="{{ is_guide }}">
+                    <span id="guide-text"> {% if not is_guide %} Are you guiding? {% else %} I am a guide! {% endif %} </span>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+<div class="wrapper row3">
+  <main style="padding:80px;" class="container clear">
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="sidebar one_quarter first">
+      <!-- ################################################################################################ -->
+      <div class="card">
+          <h6 style="margin-left:30px;">Guides Available</h6>
+          <ul style="margin-left:30px;">
+
+              {% for guide in guides %}
+                <li> <a href="../user/?username={{guide.username}}"> {{ guide.guide_name }} ({{guide.reputation}}) </a>
+                    <i class="material-icons"><a href="../chat/?receiver={{guide.username}}">&#xe0c9;</a></i></li>
+              {% endfor %}
+          </ul>
+          <hr/>
+          <p style="margin-bottom:30px;text-align:center;"><a href="../guides?event_id={{ event_id }}" >See All </a></p>
+      </div>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <div class="content three_quarter">
+      <div id="experiences" class="experience-card">
+        <h2>Experiences</h2>
+        <ul>
+            {% for experience in experiences %}
+            <li>
+              <article>
+                <header>
+                    <figure class="avatar"><img src="{% static 'images/avatar.png' %}" alt=""></figure>
+                  <username>
+                  By <a href="../user/?username={{experience.username}}">{{ experience.name }}</a>
+                  </username>
+                  <time>{{ experience.timestamp }}</time>
+                </header>
+                <div class="comcont">
+                  <p>{{ experience.experience }}</p>
+                </div>
+                <div class="upvote-experience {% if experience.is_upvoted %} upvoted-button {% else %} upvote-button {% endif %}"
+                data-expid="{{experience.experience_id}}" data-old-state="{{experience.is_upvoted}}">
+                    <span id="text-{{ experience.experience_id }}"> {% if experience.is_upvoted %} Upvoted {% else %} Upvote {% endif %} </span> |
+                    <span id="upvote-{{ experience.experience_id }}"> {{ experience.upvotes }} </span> </div>
+                <br/>
+              </article>
+            </li>
+            {% endfor %}
+        </ul>
+        <a href="../experience?event_id={{ event_id }}"> <h3 style="text-align:center;"> See All </h3> </a>
+      </div>
+
+      <h2 style="margin-top:50px; margin-left:10px;">Questions</h2>
+      {% for question in questions %}
+          <div class="questions question-card">
+              <a style="color:#999999;" href="../event/?event_id={{question.event_id}}"> {{ question.event_name }} </a>
+              <a href="../question/?question_id={{ question.question_id }}"> <h4 class="question-highlighted"> {{ question.question }} </h4> </a>
+              <div style="width: 100%;">
+                  <div style="float:left; width: 10%">
+                      <img src="{% static 'images/avatar.png' %}" alt="">
+                  </div>
+                  <div style="">
+                      <username> By <a href="../user/?username={{question.username}}">{{ question.answered_by }}</a> </username>
+                      <br/>
+                      <time>{{ question.answered_at }}</time>
+                  </div>
+              </div>
+              <div style="clear:both"></div>
+              <div class="question-answer condensed-answer">{{ question.answer }} </div>
+              <div class="see-more" style="color: #00CCBD;"> See more </div>
+          </div>
+      {% endfor %}
+    </div>
+    <div class="clear"></div>
+  </main>
+</div>
+
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.backtotop.js' %}"></script>
+<script src="{% static 'js/jquery.mobilemenu.js' %}"></script>
+<script src="{% static '/js/nav_menu.js' %}"></script>
+<script>
+    var user_exp_id = "{{ experience_id }}";
+    var experience = {% if experience %} '{{ experience }}' {% else %} '' {% endif %};
+    var event_id = "{{ event_id }}";
+    var username = "{{ username }}";
+</script>
+<script src="{% static '/js/event_page.js' %}"></script>
+</body>
+</html>

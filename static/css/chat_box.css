@@ -1,0 +1,62 @@
+.chat-left{
+  float:left;
+}
+
+.chat-container:before,
+.chat-container:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+.chat-container:after{
+  clear:both;
+}
+
+.chat-right{
+  float:right;
+}
+.chat {
+    position: relative;
+    max-width: 240px;
+    width:auto;
+    padding: 3px;
+    background: #D1D2D4;
+    border: #D1D2D4 solid 4px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 7px;
+    margin-left: 15px;
+    /*float:left;*/
+    display: inline-block;
+    /*   display: block;
+    */
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    margin-top:10px;
+ }
+
+.chat:after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: -7px;
+    border-style: solid;
+    border-width: 5px 7px 5px 0;
+    border-color: transparent #D1D2D4;
+    display: block;
+    width: 0;
+    height:0;
+}
+
+.chat:before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: -12px;
+    border-style: solid;
+    border-width: 8px 11px 8px 0;
+    border-color: transparent #D1D2D4;
+    display: block;
+    width: 0;
+    z-index: 0;
+    height:0;
+}
