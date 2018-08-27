@@ -6,13 +6,16 @@ from django.http import *
 from django.conf import settings
 import json
 
+from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.core.urlresolvers import reverse_lazy
 
 from django.template import loader
 
 from FraudDetection.forms import *
 from FraudDetection.models import *
 from django.http import HttpResponse
-
+from FraudDetection.models import Product
 
 
 def home(request):
@@ -71,3 +74,29 @@ def card_fill(request):
     else:
         form=CardForm()
     return render(request, 'portal.html', {'form':form})
+
+class IndexView(generic.ListView):
+        # name of the object to be used in the index.html
+    context_object_name = 'product_list'
+    template_name = 'modelforms/index.html'
+     
+    def get_queryset(self):
+        return Product.objects.all()
+     
+    # view for the product entry page
+class ProductEntry(CreateView):
+    model = Product
+        # the fields mentioned below become the entry rows in the generated form
+    fields = ['product_title', 'product_price', 'product_desc']
+     
+    # view for the product update page
+class ProductUpdate(UpdateView):
+    model = Product
+        # the fields mentioned below become the entyr rows in the update form
+    fields = ['product_title', 'product_price', 'product_desc']
+     
+    # view for deleting a product entry
+class ProductDelete(DeleteView):
+    model = Product
+        # the delete button forwards to the url mentioned below.
+    success_url = reverse_lazy('modelforms:index')

@@ -1,0 +1,36 @@
+{% if product_list %}
+ 
+    {% for product in product_list %}
+ 
+    <ul>
+ 
+    <li>
+        <h2> Product-Title:{{ product.product_title }}</h2>
+        <h2>Price:${{ product.product_price }}</h2>
+        <h2>Description:{{ product.product_desc }} </h2>
+           <form action="{% url 'modelforms:product-delete' product.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default btn-sm">Delete</button>
+        </form>
+           <form action="{% url 'modelforms:product-update' product.id  %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default btn-sm">Update</button>
+        </form>
+ 
+ 
+    </li>
+ 
+ 
+    </ul>
+ 
+{% endfor %}
+ 
+    {% else %}
+    <h1>No product entries found on the database.</h1>
+ 
+ 
+{% endif %}
+     <form action="{% url 'modelforms:product-entry'  %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default btn-sm">Make a Product entry here</button>
+        </form>

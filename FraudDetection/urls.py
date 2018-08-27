@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from FraudDetection.views import *
+from FraudDetection import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -28,5 +29,17 @@ urlpatterns = [
     url(r'^signup/$', sign_up_view),
     url(r'^portal/$', card_fill),
 
+    url(r'^$', views.IndexView.as_view(), name='index'),
+     
+        # modelforms/product/entry
+    url(r'^product/entry/$',views.ProductEntry.as_view(),name='product-entry'),
+     
+        # modelforms/product/2
+    url(r'^product/(?P<pk>[0-9]+)/$', views.ProductUpdate.as_view(), name='product-update'),
+     
+        # modelforms/product/(?P<pk>[0-9]+)/delete
+    url(r'^album/(?P<pk>[0-9]+)/delete$', views.ProductDelete.as_view(), name='product-delete'),
+     
+    ]
 
-]
+

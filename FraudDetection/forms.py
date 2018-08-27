@@ -49,7 +49,7 @@ class question:
 
 class CardForm(forms.Form):
     fullname=forms.CharField(max_length=250)
-    cardnumber=forms.CharField(max_length=500)
+    cardnumber=forms.CharField(max_length=20)
     mm=forms.IntegerField()
     yy=forms.IntegerField()
     cvv=forms.IntegerField()
